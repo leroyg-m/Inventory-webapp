@@ -24,7 +24,6 @@ export default function Home() {
   };
 
   useEffect(() => {
-    // Check if window is defined to ensure this runs only on the client side
     if (typeof window !== 'undefined') {
       updateInventory();
     }
