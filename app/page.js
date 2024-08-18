@@ -1,4 +1,5 @@
-'use client'
+'use client';
+
 import { useState, useEffect } from "react";
 import { collection, deleteDoc, getDoc, doc, query, getDocs, setDoc } from "firebase/firestore";
 import { Box, Button, Modal, Stack, TextField, Typography } from "@mui/material";
@@ -23,7 +24,10 @@ export default function Home() {
   };
 
   useEffect(() => {
-    updateInventory();
+    // Check if window is defined to ensure this runs only on the client side
+    if (typeof window !== 'undefined') {
+      updateInventory();
+    }
   }, []);
 
   const addItem = async (item) => {
@@ -54,11 +58,6 @@ export default function Home() {
 
     await updateInventory();
   };
-
-  useEffect(() => {
-    updateInventory();
-    console.log(inventory); // Debugging log
-  }, []);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
