@@ -6,10 +6,12 @@ import { Box, Button, Modal, Stack, TextField, Typography } from "@mui/material"
 import { firestore } from "@/firebase";
 
 export default function Home() {
+  // State to manage inventory, modal visibility, and the current item name
   const [inventory, setInventory] = useState([]);
   const [open, setOpen] = useState(false);
   const [itemName, setItemName] = useState("");
 
+  // Function to update the inventory from Firestore
   const updateInventory = async () => {
     const snapshot = query(collection(firestore, 'inventory'));
     const docs = await getDocs(snapshot);
@@ -23,12 +25,14 @@ export default function Home() {
     setInventory(inventoryList);
   };
 
+  // useEffect to run updateInventory only on the client side
   useEffect(() => {
     if (typeof window !== 'undefined') {
       updateInventory();
     }
   }, []);
 
+  // Function to add an item to the inventory
   const addItem = async (item) => {
     const docRef = doc(collection(firestore, 'inventory'), item);
     const docSnap = await getDoc(docRef);
@@ -42,6 +46,7 @@ export default function Home() {
     await updateInventory();
   };
 
+  // Function to remove an item from the inventory
   const removeItem = async (item) => {
     const docRef = doc(collection(firestore, 'inventory'), item);
     const docSnap = await getDoc(docRef);
@@ -58,6 +63,7 @@ export default function Home() {
     await updateInventory();
   };
 
+  // Functions to handle modal state
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -71,6 +77,7 @@ export default function Home() {
       alignItems="center"
       gap={2}
     >
+      {/* Modal for adding new items */}
       <Modal open={open} onClose={handleClose}>
         <Box
           position="absolute"
@@ -84,9 +91,7 @@ export default function Home() {
           display="flex"
           flexDirection="column"
           gap={3}
-          sx={{
-            transform: "translate(-50%, -50%)",
-          }}
+          sx={{ transform: "translate(-50%, -50%)" }}
         >
           <Typography variant="h6">Add Item</Typography>
           <Stack width="100%" direction="row" spacing={2}>
@@ -111,9 +116,13 @@ export default function Home() {
           </Stack>
         </Box>
       </Modal>
+
+      {/* Button to open the modal */}
       <Button variant="contained" onClick={handleOpen}>
         Add New Item
       </Button>
+
+      {/* Inventory display */}
       <Box border="1px solid #333">
         <Box
           width="800px"
